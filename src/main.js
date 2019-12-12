@@ -1,8 +1,16 @@
-import Vue from 'vue'
-import App from './App.vue'
+import * as components from './components'
+const ComponentLibrary = {
+  install (Vue, options = {}) {
+    // Components
+    for (const componentName in components) {
+      const component = components[componentName]
+      Vue.component(component.name, component)
+    }
+  }
+}
 
-Vue.config.productionTip = false
+export default ComponentLibrary
 
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+if (typeof window !== 'undefined' && window.Vue) {
+  window.Vue.use(ComponentLibrary)
+}
