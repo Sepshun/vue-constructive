@@ -1,6 +1,9 @@
 <template>
-  <div id="app">
-  </div>
+<div id="app">
+  <CoButton color="blue">
+    BUTTON
+  </CoButton>
+</div>
 </template>
 
 <script>
