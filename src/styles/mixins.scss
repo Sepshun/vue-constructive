@@ -1,3 +1,8 @@
+// ------------------------------------------------------------ \\
+// --------------------- VUE-CONSTRUCTIVE --------------------- \\
+// -------------------------- MIXINS -------------------------- \\
+// ------------------------------------------------------------ \\
+
 // Shadows Mixin
 @mixin shadow($e) {
   @if $e == 0 { box-shadow: none; }
@@ -11,4 +16,12 @@
 // Breakpoints Mixin
 @mixin breakpoint($p) {
 
+}
+
+// User Selection
+@mixin select($s) {
+  @if $s == 'auto' { user-select: auto; }
+  @if $s == 'none' { user-select: none; }
+  @if $s == 'text' { user-select: text; }
+  @if $s == 'all' { user-select: all; }
 }
