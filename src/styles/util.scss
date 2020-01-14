@@ -1,0 +1,8 @@
+// Typography Classes
+.type-h1 { @include typography('h1'); }
+.type-h2 { @include typography('h2'); }
+.type-h3 { @include typography('h3'); }
+.type-h4 { @include typography('h4'); }
+.type-h5 { @include typography('h5'); }
+.type-h6 { @include typography('h6'); }
+.type-body { @include typography('body'); }

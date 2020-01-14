@@ -18,6 +18,27 @@
 
 }
 
+// Typography Mixin
+@mixin typography($t) {
+  line-height: 1.5;
+  margin: 8px 0;
+  @if $t == 'h1' { font-size: 48px; }
+  @if $t == 'h2' { font-size: 38px; }
+  @if $t == 'h3' { font-size: 30px; }
+  @if $t == 'h4' { font-size: 24px; }
+  @if $t == 'h5' { font-size: 20px; }
+  @if $t == 'h6' {
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+  @if $t == 'body' { font-size: 14px; }
+}
+
+// Z-Index Mixin
+@mixin z-index($z) {
+
+}
+
 // User Selection
 @mixin select($s) {
   @if $s == 'auto' { user-select: auto; }

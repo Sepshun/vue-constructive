@@ -8,8 +8,10 @@ module.exports = {
     loaderOptions: {
       sass: {
         prependData: `
+        @import "@/styles/global.scss";
         @import "@/styles/tokens.scss";
         @import "@/styles/mixins.scss";
+        @import "@/styles/util.scss";
         `
       }
     }
