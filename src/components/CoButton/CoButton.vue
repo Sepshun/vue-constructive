@@ -6,31 +6,17 @@ Icon only button/FAB
 Disabled state
 -->
 
-<template>
-<button
-  class="co-btn"
-  :class="[`-${color}`, `-size-${size}`, `-${type}`]"
-  @mousedown="ripple"
->
-  <slot />
-  <div class="ripple-container" />
-</button>
-</template>
-
 <script>
 export default {
   name: 'CoButton',
   props: {
-    type: {
+    href: {
       type: String,
-      default: 'raised',
-      validator: (value) => {
-        return value === 'raised' || value === 'flat'
-      }
+      default: null
     },
     color: {
       type: String,
-      default: 'null'
+      default: 'blue'
     },
     size: {
       type: String,
@@ -39,10 +25,13 @@ export default {
         return value === 's' || value === 'm' || value === 'l' || value === 'xl'
       }
     },
-
+    rippleActive: {
+      type: Boolean,
+      default: true
+    },
     rippleColor: {
       type: String,
-      default: 'hsla(0,0%,100%,0.5)'
+      default: 'hsla(0,0%,100%,0.75)'
     },
     rippleDuration: {
       type: Number,
@@ -51,29 +40,63 @@ export default {
     rippleEasing: {
       type: String,
       default: 'ease'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    isRouterLink () {
+      return this.$router && this.to
     }
   },
   methods: {
     ripple (e) {
-      // RippleContainer - Get/Create
-      let rippleContainer = e.target.querySelector('.ripple-container')
+      if (this.rippleActive) {
+        // RippleContainer - Get/Create
+        let rippleContainer = e.target.querySelector('.ripple-container')
 
-      // RippleElement - Create New
-      let rippleEl = document.createElement('div')
-      rippleEl.className = 'ripple'
+        // RippleElement - Create New
+        let rippleEl = document.createElement('div')
+        rippleEl.className = 'ripple'
 
-      // RippleElement - Apply Styles, Append, and Animate
-      rippleEl.style.left = `${e.offsetX}px`
-      rippleEl.style.top = `${e.offsetY}px`
-      rippleEl.style.background = this.rippleColor
-      rippleEl.style.animationDuration = `${this.rippleDuration}s`
-      rippleEl.style.animationTimingFunction = this.rippleEasing
-      rippleContainer.append(rippleEl)
-      rippleEl.classList.add('-isRippling')
+        // RippleElement - Apply Styles, Append, and Animate
+        rippleEl.style.left = `${e.offsetX}px`
+        rippleEl.style.top = `${e.offsetY}px`
+        rippleEl.style.background = this.rippleColor
+        rippleEl.style.animationDuration = `${this.rippleDuration}s`
+        rippleEl.style.animationTimingFunction = this.rippleEasing
+        rippleContainer.append(rippleEl)
+        rippleEl.classList.add('-isRippling')
 
-      // RippleElement - Remove
-      setTimeout(() => { rippleContainer.removeChild(rippleEl) }, 1000 * this.rippleDuration)
+        // RippleElement - Remove
+        setTimeout(() => { rippleContainer.removeChild(rippleEl) }, 1000 * this.rippleDuration)
+      }
     }
+  },
+  render (h) {
+    let tag = this.href ? 'a' : this.isRouterLink ? 'router-link' : 'button'
+    return h(tag, {
+      staticClass: 'co-btn',
+      class: [
+        `-${this.color}`,
+        `-size-${this.size}`
+      ],
+      attrs: {
+        ...this.attrs,
+        href: this.href,
+        disabled: this.disabled
+      },
+      on: {
+        ...this.$listeners,
+        touchstart: event => { this.ripple(event) },
+        mousedown: event => { this.ripple(event) }
+      }
+    }, [
+      this.$slots.default,
+      h('div', { class: 'ripple-container' })
+    ])
   }
 }
 </script>
@@ -98,23 +121,46 @@ export default {
   position: relative;
   border: 2px solid transparent;
   border-radius: 16px;
-  color: white;
   font-size: 14px;
+  text-decoration: none;
 
   // Interaction Styles
   cursor: pointer;
   transition: 0.15s $co-transition-default-timing;
 
   // Styles & Colors
+  // Style: Flat - Default
+  background: transparent;
+  &:hover {
+    background: rgba($col-darkgray,0.1);
+    &.-blue { background: rgba($col-blue,0.1); }
+    &.-green { background: rgba($col-green,0.1); }
+    &.-yellow { background: rgba($col-yellow,0.1); }
+    &.-orange { background: rgba($col-orange,0.1); }
+    &.-red { background: rgba($col-red,0.1); }
+    &.-purple { background: rgba($col-purple,0.1); }
+    &.-pink { background: rgba($col-pink,0.1); }
+  }
+  color: $col-darkgray;
+  &.-blue { color: $col-blue; }
+  &.-green { color: $col-green; }
+  &.-yellow { color: $col-yellow; }
+  &.-orange { color: $col-orange; }
+  &.-red { color: $col-red; }
+  &.-purple { color: $col-purple; }
+  &.-pink { color: $col-pink; }
+
+  // Style: Raised
   &.-raised {
     @include shadow(1);
-    &:hover { @include shadow(3); }
+    &:hover:not([disabled]) { @include shadow(3); }
     &:active {
       @include shadow(0);
       border: 2px solid hsla(0,0%,100%,0.5);
     }
 
     background: $col-midgray;
+    color: white;
     &.-blue { background: $col-blue; }
     &.-green { background: $col-green; }
     &.-yellow { background: $col-yellow; }
@@ -122,27 +168,6 @@ export default {
     &.-red { background: $col-red; }
     &.-purple { background: $col-purple; }
     &.-pink { background: $col-pink; }
-  }
-  &.-flat {
-    background: transparent;
-    &:hover {
-      background: rgba($col-darkgray,0.1);
-      &.-blue { background: rgba($col-blue,0.1); }
-      &.-green { background: rgba($col-green,0.1); }
-      &.-yellow { background: rgba($col-yellow,0.1); }
-      &.-orange { background: rgba($col-orange,0.1); }
-      &.-red { background: rgba($col-red,0.1); }
-      &.-purple { background: rgba($col-purple,0.1); }
-      &.-pink { background: rgba($col-pink,0.1); }
-    }
-    color: $col-darkgray;
-    &.-blue { color: $col-blue; }
-    &.-green { color: $col-green; }
-    &.-yellow { color: $col-yellow; }
-    &.-orange { color: $col-orange; }
-    &.-red { color: $col-red; }
-    &.-purple { color: $col-purple; }
-    &.-pink { color: $col-pink; }
   }
 
   // Sizes
@@ -179,5 +204,11 @@ export default {
 
   // Override Default Styles
   &:focus { outline: none; }
+
+  // Disabled State
+  &[disabled] {
+    opacity: 0.5;
+    filter: grayscale(1);
+  }
 }
 </style>
