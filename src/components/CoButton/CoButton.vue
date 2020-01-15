@@ -154,7 +154,7 @@ export default {
   &.-raised {
     @include shadow(1);
     &:hover:not([disabled]) { @include shadow(3); }
-    &:active {
+    &:active:not([disabled]) {
       @include shadow(0);
       border: 2px solid hsla(0,0%,100%,0.5);
     }
